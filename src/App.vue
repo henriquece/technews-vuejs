@@ -1,47 +1,58 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { onMounted, ref } from 'vue';
+import TheHeader from './components/TheHeader.vue';
+import TheMain from './components/TheMain.vue';
+import { getTopStories, getStory } from './services/hackerNews';
+
+const topStoriesIds = ref([])
+
+const stories = ref([])
+
+// const articles = [
+//   {
+//     id: '35511357',
+//     title: 'Effective Spaced Repetition',
+//     url: 'google.com',
+//     image: 'https://borretti.me/assets/card/effective-spaced-repetition.jpg',
+//     time: 'Today',
+//   },
+//   {
+//     id: '35511717',
+//     title: 'How To Get Started In Soldering',
+//     url: 'techcrunch.com',
+//     image: 'https://hips.hearstapps.com/hmg-prod/images/soldering-tips-0172-641dcf73e5507.jpg',
+//     time: 'Yesterday'
+//   },
+// ]
+
+onMounted(async () => {
+  const { data } = await getTopStories()
+
+  topStoriesIds.value = data
+
+  const s = await Promise.all(topStoriesIds.value.slice(0, 6).map(story => getStory(story)))
+
+  stories.value = s.map(story => ({
+    id: story.data.id,
+    title: story.data.title,
+    url: story.data.url,
+    time: story.data.time,
+
+  }))
+
+  console.log('88', stories)
+
+})
+
+// const inc = () => {
+//   t.f = t.f + 1
+// }
+
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <TheHeader />
+  <TheMain :stories="stories" />
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
+<style scoped></style>
