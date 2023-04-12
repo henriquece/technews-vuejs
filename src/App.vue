@@ -2,11 +2,11 @@
 import { onMounted, ref } from 'vue';
 import TheHeader from './components/TheHeader.vue';
 import TheMain from './components/TheMain.vue';
-import { getTopStories, getStory } from './services/hackerNews';
+import { getTopStories, getStory, type TopStories, type Story } from './services/hackerNews';
 
-const topStoriesIds = ref([])
+const topStoriesIds = ref<TopStories>([])
 
-const stories = ref([])
+const stories = ref<Story[]>([])
 
 // const articles = [
 //   {
@@ -30,24 +30,15 @@ onMounted(async () => {
 
   topStoriesIds.value = data
 
-  const s = await Promise.all(topStoriesIds.value.slice(0, 6).map(story => getStory(story)))
+  const fetchedStories = await Promise.all(topStoriesIds.value.slice(0, 6).map(story => getStory(story)))
 
-  stories.value = s.map(story => ({
+  stories.value = fetchedStories.map(story => ({
     id: story.data.id,
     title: story.data.title,
     url: story.data.url,
     time: story.data.time,
-
   }))
-
-  console.log('88', stories)
-
 })
-
-// const inc = () => {
-//   t.f = t.f + 1
-// }
-
 </script>
 
 <template>

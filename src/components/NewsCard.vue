@@ -1,25 +1,48 @@
 <script setup lang="ts">
-defineProps<{
-  story: {
-    id: string
-    title: string
-    url: string
-    image: string
-    time: string
-  }
+import { onMounted, ref } from 'vue';
+import type { Story } from '@/services/hackerNews';
+import { getSiteHtml } from '@/services/scrape';
+import { getStorySource } from '@/utils/getStorySource'
+
+const props = defineProps<{
+  story: Story
 }>()
+
+const loading = ref(true)
+
+const noImageSrc = '../../public/no-image.jpeg'
+
+const imageSrc = ref(noImageSrc)
+
+onMounted(async () => {
+  const { data, success } = await getSiteHtml(props.story.url)
+
+  if (success) {
+    const html = new DOMParser().parseFromString(data, 'text/html')
+
+    const ogImage = html.querySelector('meta[property="og:image"]')?.content
+
+    if (ogImage) {
+      imageSrc.value = ogImage
+    }
+  }
+  loading.value = false
+})
 </script>
 
 <template>
   <a :href="story.url" target="_blank">
     <article>
-      <h3>{{ story.title }}</h3>
+      <h3 :title="story.title">{{ story.title }}</h3>
       <div class="time-and-source">
         <time>{{ story.time }}</time>
         <span class="time-and-source-separator">•</span>
-        <span>{{ story.url }}</span>
+        <span>{{ getStorySource(story.url) }}</span>
       </div>
-      <img :src="story.image" />
+      <div class="image-wrapper">
+        <div v-if="loading" class="skeleton" />
+        <img v-else :src="imageSrc" :class="{ noImage: imageSrc === noImageSrc }" />
+      </div>
     </article>
   </a>
 </template>
@@ -52,6 +75,11 @@ h3 {
   color: var(--color-text-primary);
   font-size: 20px;
   font-weight: 700;
+  line-height: 24px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .time-and-source {
@@ -60,13 +88,37 @@ h3 {
   color: var(--color-text-secondary);
 }
 
-time {}
-
 .time-and-source-separator {
   padding: 0px 4px;
 }
 
-img {}
+.image-wrapper {
+  border-radius: 12px;
+}
+
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -800px 0
+  }
+
+  100% {
+    background-position: 800px 0
+  }
+}
+
+.skeleton {
+  position: relative;
+  height: 100%;
+  border-radius: inherit;
+  background-color: #f6f7f8;
+  background: linear-gradient(to right, #eeeeee 8%, #bbbbbb 18%, #eeeeee 33%);
+  background-size: 800px 104px;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+}
 
 @media (min-width: 900px) {
   article {
@@ -78,15 +130,24 @@ img {}
   h3 {
     padding: 8px 16px;
     font-size: 20px;
-    line-height: 26px;
   }
 
-
-  img {
+  .image-wrapper {
     width: 302px;
     height: 160px;
     margin-bottom: 48px;
-    border-radius: 12px;
+    background-color: #bfbfbf;
+  }
+
+  img {
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+    object-fit: fill;
+  }
+
+  img.noImage {
+    object-fit: cover;
   }
 }
 </style>

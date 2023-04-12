@@ -1,14 +1,9 @@
 <script setup lang="ts">
+import type { Story } from '@/services/hackerNews';
 import NewsCard from './NewsCard.vue';
 
 defineProps<{
-  stories: {
-    id: string
-    title: string
-    url: string
-    image: string
-    time: string
-  }[]
+  stories: Story[]
 }>()
 </script>
 

@@ -9,7 +9,14 @@ export const getTopStories = async () =>
     baseURL: hackerNewsApiUrl
   })
 
+export interface Story {
+  id: string
+  title: string
+  url: string
+  time: string
+}
+
 export const getStory = async (id: string) =>
-  request.get<unknown, ResponseInterceptor<TopStories>>(`/item/${id}.json`, {
+  request.get<unknown, ResponseInterceptor<Story>>(`/item/${id}.json`, {
     baseURL: hackerNewsApiUrl
   })
