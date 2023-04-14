@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import type { Story } from '@/services/hackerNews';
 import { getSiteHtml } from '@/services/scrape';
 import { getStorySource } from '@/utils/getStorySource'
+import { formatDate } from '@/utils/formatDate'
 
 const props = defineProps<{
   story: Story
@@ -10,19 +11,19 @@ const props = defineProps<{
 
 const loading = ref(true)
 
-const noImageSrc = '../../public/no-image.jpeg'
-
-const imageSrc = ref(noImageSrc)
+const imageSrc = ref('/no-image.jpeg')
 
 onMounted(async () => {
   const { data, success } = await getSiteHtml(props.story.url)
 
+  formatDate(props.story.time)
+
   if (success) {
     const html = new DOMParser().parseFromString(data, 'text/html')
 
-    const ogImage = html.querySelector('meta[property="og:image"]')?.content
+    const ogImage: string = html.querySelector('meta[property="og:image"]')?.content
 
-    if (ogImage) {
+    if (ogImage && ogImage.startsWith('https')) {
       imageSrc.value = ogImage
     }
   }
@@ -35,13 +36,13 @@ onMounted(async () => {
     <article>
       <h3 :title="story.title">{{ story.title }}</h3>
       <div class="time-and-source">
-        <time>{{ story.time }}</time>
+        <time>{{ formatDate(story.time) }}</time>
         <span class="time-and-source-separator">•</span>
         <span>{{ getStorySource(story.url) }}</span>
       </div>
       <div class="image-wrapper">
         <div v-if="loading" class="skeleton" />
-        <img v-else :src="imageSrc" :class="{ noImage: imageSrc === noImageSrc }" />
+        <img v-else :src="imageSrc" />
       </div>
     </article>
   </a>
@@ -49,6 +50,7 @@ onMounted(async () => {
 
 <style scoped>
 a {
+  width: 100%;
   text-decoration: none;
 }
 
@@ -56,7 +58,6 @@ article {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 100%;
   height: 200px;
   border: 1px solid var(--color-border);
   border-radius: 16px;
@@ -71,7 +72,7 @@ article:hover {
 
 h3 {
   height: 80px;
-  padding: 0px 16px;
+  padding: 8px 16px 0px;
   color: var(--color-text-primary);
   font-size: 20px;
   font-weight: 700;
@@ -120,34 +121,28 @@ h3 {
   animation-timing-function: linear;
 }
 
+.image-wrapper {
+  width: 100%;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+img {
+  width: inherit;
+  height: inherit;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
 @media (min-width: 900px) {
   article {
     width: 320px;
-    height: 360px;
+    height: 300px;
     padding: 8px;
   }
 
   h3 {
     padding: 8px 16px;
-    font-size: 20px;
-  }
-
-  .image-wrapper {
-    width: 302px;
-    height: 160px;
-    margin-bottom: 48px;
-    background-color: #bfbfbf;
-  }
-
-  img {
-    width: inherit;
-    height: inherit;
-    border-radius: inherit;
-    object-fit: fill;
-  }
-
-  img.noImage {
-    object-fit: cover;
   }
 }
 </style>

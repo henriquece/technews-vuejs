@@ -13,7 +13,7 @@ export interface Story {
   id: string
   title: string
   url: string
-  time: string
+  time: number
 }
 
 export const getStory = async (id: string) =>
