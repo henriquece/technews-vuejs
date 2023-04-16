@@ -9,7 +9,7 @@ defineEmits<{
 </script>
 
 <template>
-  <input :value="modelValue" @input="$event => $emit('update:modelValue', $event.target.value)" />
+  <input :value="modelValue" @input="$event => $emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
 </template>
 
 <style scoped>

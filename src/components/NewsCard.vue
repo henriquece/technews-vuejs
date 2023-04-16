@@ -21,7 +21,9 @@ onMounted(async () => {
   if (success) {
     const html = new DOMParser().parseFromString(data, 'text/html')
 
-    const ogImage: string = html.querySelector('meta[property="og:image"]')?.content
+    const ogImageTag: HTMLMetaElement | null = html.querySelector('meta[property="og:image"]')
+
+    const ogImage = ogImageTag?.content
 
     if (ogImage && ogImage.startsWith('https')) {
       imageSrc.value = ogImage
@@ -51,6 +53,7 @@ onMounted(async () => {
 <style scoped>
 a {
   width: 100%;
+  padding: 0px 8px;
   text-decoration: none;
 }
 
@@ -134,9 +137,18 @@ img {
   object-fit: cover;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 600px) {
+  a {
+    width: 50%;
+  }
+}
+
+@media (min-width: 1024px) {
+  a {
+    width: 25%;
+  }
+
   article {
-    width: 320px;
     height: 300px;
     padding: 8px;
   }

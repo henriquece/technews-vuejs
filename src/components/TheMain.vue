@@ -42,11 +42,12 @@ main {
   flex-direction: column;
   align-items: center;
   row-gap: 32px;
-  padding: 36px 16px 36px;
+  padding: 36px 8px 36px;
 }
 
 .filter-textfield-wrapper {
-  width: 240px;
+  width: 100%;
+  padding: 0px 8px;
   align-self: flex-start;
 }
 
@@ -54,12 +55,6 @@ main {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
-}
-
-@media (min-width: 900px) {
-  main {
-    width: 1360px;
-  }
+  row-gap: 16px;
 }
 </style>
