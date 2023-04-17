@@ -9,4 +9,4 @@ A Vue.js blog, which fetches articles from the [HackerNews API](https://hacker-n
 - **HTTP Client:** Axios
 - **Linter/Code Formatter:** ESLint, Prettier
 - **Git hooks:** Husky
-- **Deploy:** AWS
+- **Deploy:** Vercel
