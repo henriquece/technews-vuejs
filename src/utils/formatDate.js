@@ -1,6 +1,6 @@
-const addZeroBefore = (number: number) => `${number < 10 ? '0' : ''}${number}`
+const addZeroBefore = (number) => `${number < 10 ? '0' : ''}${number}`
 
-export const formatDate = (time: number) => {
+export const formatDate = (time) => {
   const currentTime = new Date()
   const currentDate = currentTime.getDate()
   const currentMonth = currentTime.getMonth()

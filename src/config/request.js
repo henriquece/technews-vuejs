@@ -1,9 +1,4 @@
 import axios from 'axios'
-import type { AxiosInstance, AxiosResponse } from 'axios'
-
-export type ResponseInterceptor<T> = {
-  success: boolean
-} & AxiosResponse<T>
 
 const request = axios.create()
 
@@ -16,4 +11,4 @@ request.interceptors.response.use(
   }
 )
 
-export default request as AxiosInstance
+export default request

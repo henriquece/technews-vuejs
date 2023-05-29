@@ -1,13 +1,10 @@
-<script setup lang="ts">
+<script setup>
 import { onMounted, ref } from 'vue';
-import type { Story } from '@/services/hackerNews';
 import { getSiteHtml } from '@/services/scrape';
 import { getStorySource } from '@/utils/getStorySource'
 import { formatDate } from '@/utils/formatDate'
 
-const props = defineProps<{
-  story: Story
-}>()
+const props = defineProps(['story'])
 
 const loading = ref(true)
 
@@ -21,7 +18,7 @@ onMounted(async () => {
   if (success) {
     const html = new DOMParser().parseFromString(data, 'text/html')
 
-    const ogImageTag: HTMLMetaElement | null = html.querySelector('meta[property="og:image"]')
+    const ogImageTag = html.querySelector('meta[property="og:image"]')
 
     const ogImage = ogImageTag?.content
 
@@ -40,7 +37,7 @@ onMounted(async () => {
       <div class="time-and-source">
         <time>{{ formatDate(story.time) }}</time>
         <span class="time-and-source-separator">•</span>
-        <span>{{ getStorySource(story.url) }}</span>
+        <span>{{ story.url ? getStorySource(story.url) : 'no source' }}</span>
       </div>
       <div class="image-wrapper">
         <div v-if="loading" class="skeleton" />

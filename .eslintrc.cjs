@@ -3,13 +3,15 @@ require('@rushstack/eslint-patch/modern-module-resolution')
 
 module.exports = {
   root: true,
-  'extends': [
-    'plugin:vue/vue3-essential',
-    'eslint:recommended',
-    '@vue/eslint-config-typescript',
-    '@vue/eslint-config-prettier/skip-formatting'
-  ],
+  extends: ['@nuxtjs/eslint-config', 'prettier'],
   parserOptions: {
     ecmaVersion: 'latest'
+  },
+  rules: {
+    'no-undef': 'off',
+    'vue/no-multiple-template-root': 'off',
+    'vue/first-attribute-linebreak': 'off',
+    'vue/v-on-event-hyphenation': 'off',
+    'vue/require-prop-types': 'off'
   }
 }

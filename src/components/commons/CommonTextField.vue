@@ -1,15 +1,11 @@
-<script setup lang="ts">
-defineProps<{
-  modelValue: string
-}>()
+<script setup>
+defineProps(['modelValue'])
 
-defineEmits<{
-  (e: 'update:modelValue', value: string): void
-}>()
+defineEmits(['update:modelValue'])
 </script>
 
 <template>
-  <input :value="modelValue" @input="$event => $emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
+  <input :value="modelValue" @input="$event => $emit('update:modelValue', $event.target.value)" />
 </template>
 
 <style scoped>

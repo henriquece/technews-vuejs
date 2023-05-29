@@ -1,34 +1,31 @@
-<script setup lang="ts">
-import type { Story } from '@/services/hackerNews';
-import { computed, ref } from 'vue';
-import CommonButton from './commons/CommonButton.vue';
-import CommonTextField from './commons/CommonTextField.vue';
-import NewsCard from './NewsCard.vue';
+<script setup>
+import { computed, ref } from 'vue'
+import CommonButton from './commons/CommonButton.vue'
+import CommonTextField from './commons/CommonTextField.vue'
+import NewsCard from './NewsCard.vue'
 
-const props = defineProps<{
-  stories: Story[]
-  isLoadingInitialStories: boolean
-  isLoadingMoreStories: boolean
-}>()
+const props = defineProps([
+  'stories',
+  'isLoadingInitialStories',
+  'isLoadingMoreStories',
+])
 
-defineEmits<{
-  (e: 'loadMoreStories'): void
-}>()
+defineEmits(['loadMoreStories'])
 
 const filterValue = ref('')
 
-const filteredStories = computed(() =>
-  props.stories.filter((story) => story.title.toLowerCase().includes(filterValue.value.toLowerCase()))
+const storiesWithVisibility = computed(() =>
+  props.stories.map(story => ({ ...story, isVisible: story.title.toLowerCase().includes(filterValue.value.toLowerCase()) }))
 )
 </script>
 
 <template>
   <main>
     <div class="filter-textfield-wrapper">
-      <CommonTextField placeholder="Filter articles" v-model="filterValue" />
+      <CommonTextField v-model="filterValue" placeholder="Filter articles" />
     </div>
     <div class="news-cards">
-      <NewsCard v-for="story in filteredStories" :story="story" :key="story.id" />
+      <NewsCard v-for="story in storiesWithVisibility" v-show="story.isVisible" :key="story.id" :story="story" />
     </div>
     <CommonButton v-if="!isLoadingInitialStories" label="Load more" :loading="isLoadingMoreStories"
       @click="$emit('loadMoreStories')" />

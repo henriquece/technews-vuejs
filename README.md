@@ -1,11 +1,10 @@
 # TechNews
 
-A Vue.js blog, which fetches articles from the [HackerNews API](https://hacker-news.firebaseio.com). This project aims to be a way to practice Vue.js.
+A Nuxt.js blog, which fetches articles from the [HackerNews API](https://hacker-news.firebaseio.com).
 
 #### Tech Stack
 
-- Typescript, Javascript, Vue.js
-- **Bundler:** Vite
+- Javascript, Vue.js, Nuxt.js
 - **HTTP Client:** Axios
 - **Linter/Code Formatter:** ESLint, Prettier
 - **Git hooks:** Husky

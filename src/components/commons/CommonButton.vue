@@ -1,8 +1,5 @@
-<script setup lang="ts">
-defineProps<{
-  label: string
-  loading: boolean
-}>()
+<script setup>
+defineProps(['label', 'loading'])
 </script>
 
 <template>
