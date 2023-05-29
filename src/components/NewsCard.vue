@@ -40,7 +40,7 @@ onMounted(async () => {
       <div class="time-and-source">
         <time>{{ formatDate(story.time) }}</time>
         <span class="time-and-source-separator">•</span>
-        <span>{{ getStorySource(story.url) }}</span>
+        <span>{{ story.url ? getStorySource(story.url) : 'no source' }}</span>
       </div>
       <div class="image-wrapper">
         <div v-if="loading" class="skeleton" />

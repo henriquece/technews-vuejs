@@ -4,10 +4,10 @@ import { hackerNewsApiUrl } from '@/config/urls'
 
 export type TopStories = string[]
 
+export const getTopStoriesUrl = `${hackerNewsApiUrl}/topstories.json`
+
 export const getTopStories = async () =>
-  request.get<unknown, ResponseInterceptor<TopStories>>('/topstories.json', {
-    baseURL: hackerNewsApiUrl
-  })
+  request.get<unknown, ResponseInterceptor<TopStories>>(getTopStoriesUrl)
 
 export interface Story {
   id: string
@@ -16,7 +16,7 @@ export interface Story {
   time: number
 }
 
+export const getStoryUrl = (id: string) => `${hackerNewsApiUrl}/item/${id}.json`
+
 export const getStory = async (id: string) =>
-  request.get<unknown, ResponseInterceptor<Story>>(`/item/${id}.json`, {
-    baseURL: hackerNewsApiUrl
-  })
+  request.get<unknown, ResponseInterceptor<Story>>(getStoryUrl(id))

@@ -1,1 +1,1 @@
-export const getStorySource = (storyUrl: string) => storyUrl.split('/')[2]
+export const getStorySource = (storyUrl: string) => storyUrl?.split('/')[2]
